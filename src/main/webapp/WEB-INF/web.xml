@@ -5,21 +5,20 @@
    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" 
    version="2.5">
   <servlet>
-    <servlet-name>Hello</servlet-name>
-    <servlet-class>li.shaohuan.HelloServlet</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>Hello</servlet-name>
-    <url-pattern>/hello/*</url-pattern>
-  </servlet-mapping>
-
-  <servlet>
     <servlet-name>Login</servlet-name>
-    <servlet-class>li.shaohuan.LoginServlet</servlet-class>
+    <servlet-class>li.shaohuan.LoginController</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>Login</servlet-name>
     <url-pattern>/login/*</url-pattern>
+  </servlet-mapping>
+   <servlet>
+    <servlet-name>Logout</servlet-name>
+    <servlet-class>li.shaohuan.LogoutController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Logout</servlet-name>
+    <url-pattern>/logout/*</url-pattern>
   </servlet-mapping>
   <context-param>
     <param-name>dbURL</param-name>

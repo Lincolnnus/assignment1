@@ -7,7 +7,7 @@
   <artifactId>hello</artifactId>
   <version>0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
-  <name>Jetty HelloWorld</name>
+  <name>Board Project</name>
  
   <properties>
     <jettyVersion>7.2.0.v20101020</jettyVersion>
@@ -44,7 +44,7 @@
           <execution><goals><goal>java</goal></goals></execution>
         </executions>
         <configuration>
-          <mainClass>li.shaohuan.HelloWorld</mainClass>
+          <mainClass>li.shaohuan.HomeController</mainClass>
         </configuration>
       </plugin>
     </plugins>

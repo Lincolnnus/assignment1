@@ -10,13 +10,14 @@ import java.sql.PreparedStatement;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
  
 /**
- * Servlet implementation class LoginServlet
+ * Servlet implementation class LoginController
  */
-public class LoginServlet extends HttpServlet {
+public class LoginController extends HttpServlet {
     private static final long serialVersionUID = 1L;
     public void init() throws ServletException {
         //we can create DB connection resource here and set it to Servlet context
@@ -29,10 +30,20 @@ public class LoginServlet extends HttpServlet {
  
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
-        response.setContentType("text/html");
-        response.setStatus(HttpServletResponse.SC_OK);
-        RequestDispatcher rd = getServletContext().getRequestDispatcher("/login.html");
-        rd.include(request, response);      
+        HttpSession session = request.getSession(true);
+        Integer param = (Integer) session.getAttribute("mysession");
+        if (param != null) {
+            System.out.println("You have already logged in");
+            RequestDispatcher rd = getServletContext().getRequestDispatcher("/error.html");
+            PrintWriter out= response.getWriter();
+            out.println("<font color=red>You have already logged in</font>");
+            rd.include(request, response);
+        } else {
+            response.setContentType("text/html");
+            response.setStatus(HttpServletResponse.SC_OK);
+            RequestDispatcher rd = getServletContext().getRequestDispatcher("/login.html");
+            rd.include(request, response); 
+        }     
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -44,14 +55,27 @@ public class LoginServlet extends HttpServlet {
         try{
             Class.forName("com.mysql.jdbc.Driver");
             Connection con=DriverManager.getConnection(getServletContext().getInitParameter("dbURL"),getServletContext().getInitParameter("dbUser"),getServletContext().getInitParameter("dbUserPwd"));
-            String query = "select * from shaohuan.User where name = ? and password = ?";
+            String query = "SELECT * from User WHERE name = '" + name + "' AND password = '" + pwd +"'";
             PreparedStatement statement = con.prepareStatement(query);    
-            statement.setString(1, name); 
-            statement.setString(2, pwd); 
             ResultSet resultSet = statement.executeQuery(query);
-            while (resultSet.next()) {
-                String tableName = resultSet.getString(1); 
-                System.out.println("Table name : " + tableName);
+            if (resultSet.next()) {
+                HttpSession session = request.getSession(true);
+                Integer param = (Integer) session.getAttribute("mysession");
+                if (param != null) {
+                    session.setAttribute("mysession", new Integer(param.intValue() + 1));
+                    param = (Integer) session.getAttribute("mysession");
+                } else {
+                    param = new Integer(1);
+                    session.setAttribute("mysession", param);
+                    session.setAttribute("username", name);
+                }
+                System.out.println("You have successfully logged in");
+                response.sendRedirect("/");
+            }else{
+                RequestDispatcher rd = getServletContext().getRequestDispatcher("/login.html");
+                PrintWriter out= response.getWriter();
+                out.println("<font color=red>Either user name or password is wrong.</font>");
+                rd.include(request, response);
             }
             con.close();
         }
