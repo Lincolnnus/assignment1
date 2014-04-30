@@ -82,17 +82,6 @@ public class LoginController extends HttpServlet {
         catch(Exception exce){
             exce.printStackTrace();
         }
-
-       /* if(userID.equals(user) && password.equals(pwd)){
-            response.sendRedirect("LoginSuccess.jsp");
-        }else{
-            RequestDispatcher rd = getServletContext().getRequestDispatcher("/login.html");
-            PrintWriter out= response.getWriter();
-            out.println("<font color=red>Either user name or password is wrong.</font>");
-            rd.include(request, response);
-             
-        }*/
          
     }
- 
 }
